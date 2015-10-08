@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6615CB07-9B7A-47BC-8379-9CDA5FD4EDFC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LookAndPlayForm</RootNamespace>
+    <AssemblyName>LookAndPlayForm</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tobii.Gaze.Core.Net, Version=2.0.3.182, Culture=neutral, PublicKeyToken=70326046dcdce6cb, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\Tobii.Gaze.Core.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="WobbrockLib">
+      <HintPath>dll\WobbrockLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Calibration\CalibrationError.cs" />
+    <Compile Include="Calibration\CalibrationResultForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Calibration\CalibrationResultForm.designer.cs">
+      <DependentUpon>CalibrationResultForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Calibration\CalibrationResultPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Calibration\CalibrationResultPanel.designer.cs">
+      <DependentUpon>CalibrationResultPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EyeTracking functions\eyesDetector.cs" />
+    <Compile Include="Calibration\CalibrationWinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Calibration\CalibrationWinForm.Designer.cs">
+      <DependentUpon>CalibrationWinForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EyeX\EyeTrackingEngine.cs" />
+    <Compile Include="EyeX\ExeXWinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EyeX\ExeXWinForm.Designer.cs">
+      <DependentUpon>ExeXWinForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EyeX\TrackStatusControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EyeX\TrackStatusControl.designer.cs">
+      <DependentUpon>TrackStatusControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Varios\TobiiClass.cs" />
+    <Compile Include="Varios\functions.cs" />
+    <Compile Include="Varios\Definitions.cs" />
+    <Compile Include="Varios\Dwell.cs" />
+    <Compile Include="EyeTracking functions\Filters.cs" />
+    <Compile Include="Varios\MouseControl.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Varios\settings.cs" />
+    <Compile Include="Varios\sharedData.cs" />
+    <Compile Include="Varios\TestData.cs" />
+    <Compile Include="EyeTracking functions\eyetrackingFunctions.cs" />
+    <EmbeddedResource Include="Calibration\CalibrationResultForm.resx">
+      <DependentUpon>CalibrationResultForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Calibration\CalibrationResultPanel.resx">
+      <DependentUpon>CalibrationResultPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Calibration\CalibrationWinForm.resx">
+      <DependentUpon>CalibrationWinForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EyeX\ExeXWinForm.resx">
+      <DependentUpon>ExeXWinForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EyeX\TrackStatusControl.resx">
+      <DependentUpon>TrackStatusControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Readme.txt" />
+    <None Include="Resources\cursorFlecha.png" />
+    <None Include="Resources\Animales\pavo.gif" />
+    <None Include="Resources\Animales\cocodrilo.gif" />
+    <None Include="Resources\Animales\pez.gif" />
+    <None Include="Resources\Animales\mono.gif" />
+    <None Include="Resources\Animales\tortuga.gif" />
+    <None Include="Resources\Animales\elefante.gif" />
+    <None Include="Resources\Animales\raton.gif" />
+    <Content Include="Resources\Animales\sapo.gif" />
+    <Content Include="Resources\Animales\tigre.gif" />
+    <Content Include="TobiiGazeCore32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
