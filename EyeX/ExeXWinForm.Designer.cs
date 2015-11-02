@@ -46,6 +46,7 @@ namespace LookAndPlayForm
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this._trackStatus = new LookAndPlayForm.TrackStatusControl();
+            this.textBoxFixation = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // progressBar4Distance
@@ -167,11 +168,20 @@ namespace LookAndPlayForm
             this._trackStatus.Size = new System.Drawing.Size(340, 280);
             this._trackStatus.TabIndex = 3;
             // 
+            // textBoxFixation
+            // 
+            this.textBoxFixation.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxFixation.Location = new System.Drawing.Point(371, 447);
+            this.textBoxFixation.Name = "textBoxFixation";
+            this.textBoxFixation.Size = new System.Drawing.Size(50, 26);
+            this.textBoxFixation.TabIndex = 26;
+            // 
             // EyeXWinForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 496);
+            this.ClientSize = new System.Drawing.Size(443, 496);
+            this.Controls.Add(this.textBoxFixation);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.buttonCalibrate);
@@ -213,6 +223,7 @@ namespace LookAndPlayForm
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox textBoxFixation;
     }
 }
 

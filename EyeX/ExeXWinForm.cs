@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using FixDet;
 using Tobii.Gaze.Core;
 using WobbrockLib.Devices;
 
@@ -14,11 +15,11 @@ namespace LookAndPlayForm
 
         public readonly EyeTrackingEngine eyeTrackingEngine;
 
-        private bool ETcontrolCursor = false;
-        private MouseController CursorControl = new MouseController();
-        private LowLevelKeyboardHook _llkhk;
-        private Dwell clickDwell;
-
+        bool ETcontrolCursor = false;
+        MouseController CursorControl = new MouseController();
+        LowLevelKeyboardHook _llkhk;
+        Dwell clickDwell;
+        FixDetectorClass fixationDetector;
 
 
 
@@ -38,56 +39,51 @@ namespace LookAndPlayForm
 
             clickDwell = new Dwell();
 
+
+            fixationDetector = new FixDetectorClass();
+            fixationDetector.FixationStart += fixationDetector_FixationStart;
+            fixationDetector.FixationEnd += fixationDetector_FixationEnd;
+            //fixationDetector.FixationUpdate += fixationDetector_FixationUpdate;
+
+
+            fixationDetector.Analyzer = EFDAnalyzer.fdaFixationSize;
+            fixationDetector.FixationRadius = 70;
+            fixationDetector.NoiseFilter = 0;
+            fixationDetector.Filter = EFDFilter.fdfAveraging;
+            fixationDetector.MinFixDuration = 20;
+            fixationDetector.FilterBufferSize = 5;
+            fixationDetector.UpdateInterval = 1000;
+
+            fixationDetector.init();            
         }
 
-        private delegate void Action();
 
-        private void GazePoint(object sender, GazePointEventArgs gazePointEventArgs)
+
+
+
+
+
+
+
+        void fixationDetector_FixationEnd(int aTime, int aDuration, int aX, int aY)
         {
-            BeginInvoke(new Action(() =>
-                {
-                    var handle = Handle;
-                    if (handle == null)
-                    {
-                        // window not created yet. never mind.
-                        return;
-                    }
+            textBoxFixation.BackColor = Color.Blue;
+        }
 
-                    _trackStatus.OnGazeData(gazePointEventArgs.GazeDataReceived);
-                    progressBar4Distance.Value = eyetrackingFunctions.distanceBetweenDev2User(gazePointEventArgs.GazeDataReceived);
-                    Invalidate();
-                }));
-
-            if (ETcontrolCursor)
-            {
-                PointD cursorFiltered = new PointD();
-                PointD gazeWeighted;
-                gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);
-
-                if (ETcontrolCursor)
-                    cursorFiltered = CursorControl.filterData(gazeWeighted, true);
-                else
-                    cursorFiltered = CursorControl.filterData(gazeWeighted, false);
-            }
+        void fixationDetector_FixationStart(int aTime, int aDuration, int aX, int aY)
+        {
+            textBoxFixation.BackColor = Color.Red;
         }
         	
+        
+        
+        
+        
+        
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
             eyeTrackingEngine.Dispose();
-        }
-
-        private void buttonViewCalibration_Click(object sender, EventArgs e)
-        {
-            var resultForm = new CalibrationResultForm();
-            resultForm.SetPlotData(LookAndPlayForm.Program.datosCompartidos.calibrationDataEyeX);
-            resultForm.ShowDialog();
-        }
-
-        private void buttonCalibrate_Click(object sender, EventArgs e)
-        {
-            CalibrationWinForm calibrationForm = new CalibrationWinForm(this, eyeTrackingEngine);
-            calibrationForm.Show();
         }
 
         private void EyeXWinForm_Load(object sender, EventArgs e)
@@ -98,30 +94,58 @@ namespace LookAndPlayForm
         private void EyeXWinForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             _llkhk.Uninstall();
+            fixationDetector.finalize();
         }
 
-        private void toogleETcontrolCursor()
-        {
-            ETcontrolCursor = !ETcontrolCursor;
-            
-            if(ETcontrolCursor)
-                clickDwell.startDwelling();
 
-            if(!ETcontrolCursor)
-                clickDwell.stopDwelling();
-        }
 
-        private void OnKeyboardHookPress(object sender, KeyPressEventArgs e)
+
+
+
+
+
+
+
+        private delegate void Action();
+
+        private void GazePoint(object sender, GazePointEventArgs gazePointEventArgs)
         {
-            switch (e.KeyChar)
+            BeginInvoke(new Action(() =>
             {
-                case 'q':
-                case 'Q':
-                    toogleETcontrolCursor();
-                    break;
+                var handle = Handle;
+                if (handle == null)
+                {
+                    // window not created yet. never mind.
+                    return;
+                }
 
+                _trackStatus.OnGazeData(gazePointEventArgs.GazeDataReceived);
+                progressBar4Distance.Value = eyetrackingFunctions.distanceBetweenDev2User(gazePointEventArgs.GazeDataReceived);
+                Invalidate();
+            }));
+
+            if (ETcontrolCursor)
+            {
+                PointD cursorFiltered = new PointD();
+                PointD gazeWeighted;
+                gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);
+
+                cursorFiltered = CursorControl.filterData(gazeWeighted, true);
+
+                fixationDetector.addPoint(
+                       convertirTimeStampMicro2Milli(gazePointEventArgs.GazeDataReceived.Timestamp),
+                       (int)(gazeWeighted.X * (double)Screen.PrimaryScreen.Bounds.Width),
+                       (int)(gazeWeighted.Y * (double)Screen.PrimaryScreen.Bounds.Height)
+                        );
             }
         }
+
+        int convertirTimeStampMicro2Milli(long timeStampMicro)
+        {
+            int timeStampMili = (int)(timeStampMicro / (long)1000);
+            return timeStampMili;
+        }
+
 
         private void OnGetCalibrationCompleted(object sender, CalibrationReadyEventArgs e)
         {
@@ -142,5 +166,52 @@ namespace LookAndPlayForm
             }));
 
         }
+
+        private void OnKeyboardHookPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case 'q':
+                case 'Q':
+                    toogleETcontrolCursor();
+                    break;
+
+            }
+        }
+
+        private void toogleETcontrolCursor()
+        {
+            ETcontrolCursor = !ETcontrolCursor;
+
+            if (ETcontrolCursor)
+                clickDwell.startDwelling();
+
+            if (!ETcontrolCursor)
+                clickDwell.stopDwelling();
+        }
+
+
+
+
+
+
+
+
+        private void buttonViewCalibration_Click(object sender, EventArgs e)
+        {
+            var resultForm = new CalibrationResultForm();
+            resultForm.SetPlotData(LookAndPlayForm.Program.datosCompartidos.calibrationDataEyeX);
+            resultForm.ShowDialog();
+        }
+
+        private void buttonCalibrate_Click(object sender, EventArgs e)
+        {
+            CalibrationWinForm calibrationForm = new CalibrationWinForm(this, eyeTrackingEngine);
+            calibrationForm.Show();
+        }
+
+        
+        
+        
     }
 }
