@@ -142,7 +142,7 @@ namespace LookAndPlayForm
 
         int convertirTimeStampMicro2Milli(long timeStampMicro)
         {
-            int timeStampMili = (int)(timeStampMicro / (long)1000);
+            int timeStampMili = Math.Abs((int)(timeStampMicro / (long)1000));
             return timeStampMili;
         }
 
