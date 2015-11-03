@@ -15,12 +15,12 @@ namespace LookAndPlayForm
 
         public readonly EyeTrackingEngine eyeTrackingEngine;
 
-        bool ETcontrolCursor = false;
+        bool AppControlCursor = false;
         MouseController CursorControl = new MouseController();
         LowLevelKeyboardHook _llkhk;
         Dwell clickDwell;
         FixDetectorClass fixationDetector;
-
+        bool gazeIsFix;
 
 
 
@@ -31,7 +31,6 @@ namespace LookAndPlayForm
             this.eyeTrackingEngine = eyeTrackingEngine;
             eyeTrackingEngine.GazePoint += this.GazePoint;
             eyeTrackingEngine.OnGetCalibrationCompletedEvent += this.OnGetCalibrationCompleted;
-
             eyeTrackingEngine.Initialize();
 
             _llkhk = new LowLevelKeyboardHook("Low-level Keyboard Hook");
@@ -55,6 +54,13 @@ namespace LookAndPlayForm
             fixationDetector.UpdateInterval = 1000;
 
             fixationDetector.init();            
+
+            //aclemottelibs.Wimu wimuDevice = new aclemottelibs.Wimu("COM37");
+            //if (!wimuDevice.serialPortConfigured)
+            //{
+            //    MessageBox.Show("!wimuDevice.serialPortConfigured");
+            //}
+
         }
 
 
@@ -68,11 +74,13 @@ namespace LookAndPlayForm
         void fixationDetector_FixationEnd(int aTime, int aDuration, int aX, int aY)
         {
             textBoxFixation.BackColor = Color.Red;
+            gazeIsFix = false;
         }
 
         void fixationDetector_FixationStart(int aTime, int aDuration, int aX, int aY)
         {
             textBoxFixation.BackColor = Color.Green;
+            gazeIsFix = true;
         }
         	
         
@@ -124,20 +132,21 @@ namespace LookAndPlayForm
                 Invalidate();
             }));
 
-            if (ETcontrolCursor)
-            {
-                PointD cursorFiltered = new PointD();
-                PointD gazeWeighted;
-                gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);
+            PointD gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);
+            
+            fixationDetector.addPoint(
+                    convertirTimeStampMicro2Milli(gazePointEventArgs.GazeDataReceived.Timestamp),
+                    (int)(gazeWeighted.X * (double)Screen.PrimaryScreen.Bounds.Width),
+                    (int)(gazeWeighted.Y * (double)Screen.PrimaryScreen.Bounds.Height)
+                    );
 
-                cursorFiltered = CursorControl.filterData(gazeWeighted, true);
 
-                fixationDetector.addPoint(
-                       convertirTimeStampMicro2Milli(gazePointEventArgs.GazeDataReceived.Timestamp),
-                       (int)(gazeWeighted.X * (double)Screen.PrimaryScreen.Bounds.Width),
-                       (int)(gazeWeighted.Y * (double)Screen.PrimaryScreen.Bounds.Height)
-                        );
-            }
+            PointD cursorFiltered;
+            if(AppControlCursor)
+                if(!gazeIsFix)
+                    cursorFiltered = CursorControl.filterData(gazeWeighted, true);
+
+
         }
 
         int convertirTimeStampMicro2Milli(long timeStampMicro)
@@ -145,7 +154,6 @@ namespace LookAndPlayForm
             int timeStampMili = Math.Abs((int)(timeStampMicro / (long)1000));
             return timeStampMili;
         }
-
 
         private void OnGetCalibrationCompleted(object sender, CalibrationReadyEventArgs e)
         {
@@ -167,6 +175,9 @@ namespace LookAndPlayForm
 
         }
 
+
+
+
         private void OnKeyboardHookPress(object sender, KeyPressEventArgs e)
         {
             switch (e.KeyChar)
@@ -181,12 +192,12 @@ namespace LookAndPlayForm
 
         private void toogleETcontrolCursor()
         {
-            ETcontrolCursor = !ETcontrolCursor;
+            AppControlCursor = !AppControlCursor;
 
-            if (ETcontrolCursor)
+            if (AppControlCursor)
                 clickDwell.startDwelling();
 
-            if (!ETcontrolCursor)
+            if (!AppControlCursor)
                 clickDwell.stopDwelling();
         }
 

@@ -73,6 +73,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Tobii.Gaze.Core.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Wimu">
+      <HintPath>..\HeadTracking\WimuV2\Wimu\bin\Debug\Wimu.dll</HintPath>
+    </Reference>
     <Reference Include="WobbrockLib">
       <HintPath>dll\WobbrockLib.dll</HintPath>
     </Reference>

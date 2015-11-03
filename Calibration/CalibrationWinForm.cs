@@ -32,14 +32,14 @@ namespace LookAndPlayForm
         private const int samplingDataTime = 750;
         private const int idleTime = 1000; //2000;
         //EyeX
-        private const int preShowTime = 1000;
-        private const int postShowTime = 2000;
+        private const int preShowTime = 500;
+        private const int postShowTime = 1000;
         
         private int calibrationPointOffset = 100;
         private int numeroPuntosCalibracion;
         private bool eyeTrackerReady2Calibrate = false;
         private Size bigImage = new Size(80, 80);
-        private Size littleImage = new Size(30, 30);
+        private Size littleImage = new Size(20, 20);
         private Timer timerPreShow;
         private Timer timerPostShow;
         private calibrationPoint currentCalibrationPoint;
