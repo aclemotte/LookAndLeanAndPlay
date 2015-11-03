@@ -67,12 +67,12 @@ namespace LookAndPlayForm
 
         void fixationDetector_FixationEnd(int aTime, int aDuration, int aX, int aY)
         {
-            textBoxFixation.BackColor = Color.Blue;
+            textBoxFixation.BackColor = Color.Red;
         }
 
         void fixationDetector_FixationStart(int aTime, int aDuration, int aX, int aY)
         {
-            textBoxFixation.BackColor = Color.Red;
+            textBoxFixation.BackColor = Color.Green;
         }
         	
         
