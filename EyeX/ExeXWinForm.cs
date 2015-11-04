@@ -22,10 +22,15 @@ namespace LookAndPlayForm
         FixDetectorClass fixationDetector;
         bool gazeIsFix;
 
+        long firtsTimeStampMicro;
+        bool firstTimeStamp;
+
 
 
         public EyeXWinForm(EyeTrackingEngine eyeTrackingEngine)
         {
+            firstTimeStamp = true;
+
             InitializeComponent();
 
             this.eyeTrackingEngine = eyeTrackingEngine;
@@ -151,7 +156,19 @@ namespace LookAndPlayForm
 
         int convertirTimeStampMicro2Milli(long timeStampMicro)
         {
-            int timeStampMili = Math.Abs((int)(timeStampMicro / (long)1000));
+            int timeStampMili;
+
+            if(firstTimeStamp)
+            {
+                firstTimeStamp = false;
+                firtsTimeStampMicro = timeStampMicro;
+                timeStampMili = 0;
+            }
+            else
+            {
+                timeStampMili = ((int)(timeStampMicro - firtsTimeStampMicro)) / 1000;
+            }
+            
             return timeStampMili;
         }
 
