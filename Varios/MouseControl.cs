@@ -33,14 +33,15 @@ namespace LookAndPlayForm
         /// <param name="posx"></param>
         /// <param name="posy"></param>
         /// <returns></returns>
-        public bool locate_mouse(int posx, int posy)
+        public bool locateCursor(PointD gazeData)
         {
-            PointD cursorPositionFiltered = new PointD();
-            cursorPositionFiltered = cursorFilter.getMedianGazeFiltered(new PointD(posx, posy));
-
-            //Cursor.Position = new Point(posx, posy);
-            Cursor.Position = new Point(Convert.ToInt32(cursorPositionFiltered.X), Convert.ToInt32(cursorPositionFiltered.Y));
-            return true;
+            if (Double.IsNaN(gazeData.X) || Double.IsNaN(gazeData.Y))
+                return false;
+            else
+            {
+                Cursor.Position = posicionMouseFromGazeNormalized(gazeData);
+                return true;
+            }
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace LookAndPlayForm
         /// <param name="posx"></param>
         /// <param name="posy"></param>
         /// <returns></returns>
-        public PointD filterData(PointD gazeData, bool moveCursor)
+        public PointD filterGazeData(PointD gazeData, bool moveCursor)
         {
             PointD gazeDataFiltered;
 
@@ -62,28 +63,24 @@ namespace LookAndPlayForm
                     gazeDataFiltered = new PointD(cursorFilter.getMovingAverageGaze(gazeData));
                 if (settings.filtertypeSelected == filtertype.median)
                     gazeDataFiltered = new PointD(cursorFilter.getMedianGazeFiltered(gazeData));
-
-
-                if (moveCursor)
-                {
-                    switch(settings.eyetrackerSelected)
-                    {
-                        case eyetrackertype.tobii:
-                            Cursor.Position = posicionMouseFromGazeNormalized(gazeDataFiltered);
-                            break;
-                        case eyetrackertype.eyetribe:
-                            Cursor.Position = posicionMouseFromGazePixel(gazeDataFiltered);
-                            break;
-                        default:
-                            break;
-                    }
-                    
-                }
-
             }
 
             return gazeDataFiltered;
         }
+
+        public void click()
+        {
+            //Call the imported function with the cursor's current position
+            int X = Cursor.Position.X;
+            int Y = Cursor.Position.Y;
+            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
+        }
+
+        
+
+
+
+
         
         private Point posicionMouseFromGazePixel(PointD gazeDataFiltered)
         {
@@ -92,6 +89,7 @@ namespace LookAndPlayForm
             Point posicionMousePx = new Point(posX, posY);
             return posicionMousePx;
         }
+        
         private Point posicionMouseFromGazeNormalized(PointD gazeDataFiltered)
         {
             int posX = Convert.ToInt32(gazeDataFiltered.X * monitorBounds.Size.Width) + monitorBounds.X;
@@ -128,13 +126,6 @@ namespace LookAndPlayForm
             return validF;
         }
 
-        public void click()
-        {
-            //Call the imported function with the cursor's current position
-            int X = Cursor.Position.X;
-            int Y = Cursor.Position.Y;
-            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
-        }
-
+        
     }
 }
