@@ -40,7 +40,7 @@ namespace LookAndPlayForm
                 if (settings.filtertypeSelected == filtertype.movingaverage)
                     gazeDataFiltered = new PointD(getMovingAverageGaze(gazeData));
                 if (settings.filtertypeSelected == filtertype.median)
-                    gazeDataFiltered = new PointD(getMedianGazeFiltered(gazeData));
+                    gazeDataFiltered = new PointD(getMeanMedianGazeFiltered(gazeData));
             }
 
             return gazeDataFiltered;
@@ -55,8 +55,7 @@ namespace LookAndPlayForm
 
         /// <summary>
         ///1. si el argumento no tiene NANs
-        ///         3. si el buffer esta lleno se filtra (movimientos de fijacion)
-        ///             4. se saca un elemento de la cola y luego se pone el argumento
+        ///             4. se mete un elemento de la cola
         ///             5. se transforma en lista la cola y se ordena de mayor a menor
         ///             6. se promedia los puntos del medio de la lista y se retorna este valor
         ///         7. si el buffer no esta lleno se encola el argumento y se retorna el argumento
@@ -64,38 +63,24 @@ namespace LookAndPlayForm
         /// </summary>
         /// <param name="GazePoints"></param>
         /// <returns></returns>
-        PointD getMedianGazeFiltered(PointD GazePoints)
+        PointD getMeanMedianGazeFiltered(PointD GazePoints)
         {    
             //1.si el argumento no tiene NANs
-            if (!double.IsNaN(GazePoints.X) && !double.IsNaN(GazePoints.Y))
+            if(nonNanGazeValues(GazePoints))
             {
-                //3. si el buffer esta lleno se filtra (movimientos de fijacion)
-                if (GazeBufferX.Count == FilterBufferSize || GazeBufferY.Count == FilterBufferSize)
-                {
-                    //4. se saca un elemento de la cola y luego se pone el argumento
-                    GazeBufferX.Dequeue();
-                    GazeBufferY.Dequeue();
-                    GazeBufferX.Enqueue(GazePoints.X);
-                    GazeBufferY.Enqueue(GazePoints.Y);
-                    //5.se transforma en lista la cola y se ordena de mayor a menor
-                    var listaTempX = GazeBufferX.ToList();
-                    var listaTempY = GazeBufferY.ToList();
-                    listaTempX.Sort();
-                    listaTempY.Sort();
+                add2Buffer(GazePoints);
 
-                    PointD MedianPoint = new PointD();
-                    //6.se promedia los puntos del medio de la lista y se retorna este valor
-                    MedianPoint.X = (listaTempX[FilterBufferSize / 2 - 1] + listaTempX[(FilterBufferSize / 2) + 0] + listaTempX[(FilterBufferSize / 2) + 1]) / 3;
-                    MedianPoint.Y = (listaTempY[FilterBufferSize / 2 - 1] + listaTempY[(FilterBufferSize / 2) + 0] + listaTempY[(FilterBufferSize / 2) + 1]) / 3;
-                    return MedianPoint;
-                }
-                //7.si el buffer no esta lleno se encola el argumento y se retorna el argumento
-                else
-                {
-                    GazeBufferX.Enqueue(GazePoints.X);
-                    GazeBufferY.Enqueue(GazePoints.Y);
-                    return GazePoints;
-                }
+                //5.se transforma en lista la cola y se ordena de mayor a menor
+                var listaTempX = GazeBufferX.ToList();
+                var listaTempY = GazeBufferY.ToList();
+                listaTempX.Sort();
+                listaTempY.Sort();
+
+                PointD MedianPoint = new PointD();
+                //6.se promedia los puntos del medio de la lista y se retorna este valor
+                MedianPoint.X = (listaTempX[FilterBufferSize / 2 - 1] + listaTempX[(FilterBufferSize / 2) + 0] + listaTempX[(FilterBufferSize / 2) + 1]) / 3;
+                MedianPoint.Y = (listaTempY[FilterBufferSize / 2 - 1] + listaTempY[(FilterBufferSize / 2) + 0] + listaTempY[(FilterBufferSize / 2) + 1]) / 3;
+                return MedianPoint;
             }//9.si el argumento tiene NANs se retorna el argumento
             else
                 return GazePoints;
@@ -103,8 +88,6 @@ namespace LookAndPlayForm
 
         /// <summary>
         ///1.si el argumento no tiene NANs
-        ///         3. si el buffer esta lleno
-        ///             saca un elemento de la cola
         ///         4.1 mete argumento en la cola
         ///         4.2 se transforma en lista
         ///         4.3 se hace el promedio de la lista
@@ -117,18 +100,10 @@ namespace LookAndPlayForm
         PointD getMovingAverageGaze(PointD GazePoints)
         {
             //1 si el argumento tiene NANs
-            if (!double.IsNaN(GazePoints.X) && !double.IsNaN(GazePoints.Y))
+            if (nonNanGazeValues(GazePoints))
             {
-                //1.3.si el buffer esta lleno
-                if (GazeBufferX.Count == FilterBufferSize || GazeBufferY.Count == FilterBufferSize)
-                {
-                    GazeBufferX.Dequeue();
-                    GazeBufferY.Dequeue();
-                }
+                add2Buffer(GazePoints);
 
-                //4.1
-                GazeBufferX.Enqueue(GazePoints.X);
-                GazeBufferY.Enqueue(GazePoints.Y);
                 //4.2
                 var listaTempX = GazeBufferX.ToList();
                 var listaTempY = GazeBufferY.ToList();
@@ -143,6 +118,36 @@ namespace LookAndPlayForm
             {
                 return GazePoints;
             }
+        }
+
+        bool add2Buffer(PointD GazePoints)
+        {
+            if (bufferFull())
+            {
+                GazeBufferX.Dequeue();
+                GazeBufferY.Dequeue();
+            }
+
+            GazeBufferX.Enqueue(GazePoints.X);
+            GazeBufferY.Enqueue(GazePoints.Y);
+
+            return true;
+        }
+
+        bool nonNanGazeValues(PointD GazePoints)
+        {
+            if (!double.IsNaN(GazePoints.X) && !double.IsNaN(GazePoints.Y))
+                return true;
+            else
+                return false;
+        }
+
+        bool bufferFull()
+        {
+            if (GazeBufferX.Count == FilterBufferSize || GazeBufferY.Count == FilterBufferSize)
+                return true;
+            else
+                return false;
         }
 
     }
