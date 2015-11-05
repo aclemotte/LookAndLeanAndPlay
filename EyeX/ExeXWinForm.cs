@@ -21,7 +21,7 @@ namespace LookAndPlayForm
         Dwell clickDwell;
         FixDetectorClass fixationDetector;
         bool gazeIsFix;
-
+        private Filters gazeFilter = new Filters();
         long firtsTimeStampMicro;
         bool firstTimeStamp;
 
@@ -79,6 +79,7 @@ namespace LookAndPlayForm
         void fixationDetector_FixationEnd(int aTime, int aDuration, int aX, int aY)
         {
             textBoxFixation.BackColor = Color.Red;
+            gazeFilter.clearBuffers();
             gazeIsFix = false;
         }
 
@@ -147,14 +148,19 @@ namespace LookAndPlayForm
 
 
             PointD cursorFiltered;
-            if(AppControlCursor)
-                if (!gazeIsFix)
+            if (AppControlCursor)
+            {
+                if (gazeIsFix)
                 {
-                    cursorFiltered = gazeWeighted; // = CursorControl.filterGazeData(gazeWeighted, true);
+                    cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
+                    CursorControl.locateCursor(cursorFiltered);
+                    //CursorControl.locateCursor(gazeWeighted);
+                }
+                else
+                {
                     CursorControl.locateCursor(gazeWeighted);
                 }
-
-
+            }
         }
 
         int convertirTimeStampMicro2Milli(long timeStampMicro)
@@ -214,11 +220,11 @@ namespace LookAndPlayForm
         {
             AppControlCursor = !AppControlCursor;
 
-            if (AppControlCursor)
-                clickDwell.startDwelling();
+            //if (AppControlCursor)
+            //    clickDwell.startDwelling();
 
-            if (!AppControlCursor)
-                clickDwell.stopDwelling();
+            //if (!AppControlCursor)
+            //    clickDwell.stopDwelling();
         }
 
 

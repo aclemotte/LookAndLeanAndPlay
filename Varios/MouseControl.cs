@@ -20,7 +20,6 @@ namespace LookAndPlayForm
         private const int MOUSEEVENTF_LEFTUP = 0x04;
         private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
         private const int MOUSEEVENTF_RIGHTUP = 0x10;
-        private Filters cursorFilter = new Filters();
 
         public MouseController()
         {
@@ -44,30 +43,6 @@ namespace LookAndPlayForm
             }
         }
 
-        /// <summary>
-        /// Ubica el cursor en la posicion especificada por posx y posy, donde estos valores estan normalizados 
-        /// entre 0 y 1, siendo 0,0 la esquina superior izquierda y 1,1 la esquina inferior derecha
-        /// </summary>
-        /// <param name="posx"></param>
-        /// <param name="posy"></param>
-        /// <returns></returns>
-        public PointD filterGazeData(PointD gazeData, bool moveCursor)
-        {
-            PointD gazeDataFiltered;
-
-            if (Double.IsNaN(gazeData.X) || Double.IsNaN(gazeData.Y))
-                gazeDataFiltered = new PointD(Double.NaN, Double.NaN);
-            else
-            {
-                if(settings.filtertypeSelected == filtertype.movingaverage)
-                    gazeDataFiltered = new PointD(cursorFilter.getMovingAverageGaze(gazeData));
-                if (settings.filtertypeSelected == filtertype.median)
-                    gazeDataFiltered = new PointD(cursorFilter.getMedianGazeFiltered(gazeData));
-            }
-
-            return gazeDataFiltered;
-        }
-
         public void click()
         {
             //Call the imported function with the cursor's current position
@@ -76,20 +51,6 @@ namespace LookAndPlayForm
             mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
         }
 
-        
-
-
-
-
-        
-        private Point posicionMouseFromGazePixel(PointD gazeDataFiltered)
-        {
-            int posX = Convert.ToInt32(gazeDataFiltered.X * 1) + 0;
-            int posY = Convert.ToInt32(gazeDataFiltered.Y * 1) + 0;
-            Point posicionMousePx = new Point(posX, posY);
-            return posicionMousePx;
-        }
-        
         private Point posicionMouseFromGazeNormalized(PointD gazeDataFiltered)
         {
             int posX = Convert.ToInt32(gazeDataFiltered.X * monitorBounds.Size.Width) + monitorBounds.X;
@@ -97,7 +58,23 @@ namespace LookAndPlayForm
             Point posicionMousePx = new Point(posX, posY);
             return posicionMousePx;
         }
+        
 
+
+
+
+
+
+
+
+        private Point posicionMouseFromGazePixel(PointD gazeDataFiltered)
+        {
+            int posX = Convert.ToInt32(gazeDataFiltered.X * 1) + 0;
+            int posY = Convert.ToInt32(gazeDataFiltered.Y * 1) + 0;
+            Point posicionMousePx = new Point(posX, posY);
+            return posicionMousePx;
+        }        
+        
         /// <summary>
         /// Se verifica 3 casos:
         ///     1. si es mayor a 1 se iguala a 1
