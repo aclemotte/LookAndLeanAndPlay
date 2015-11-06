@@ -71,7 +71,7 @@ namespace LookAndPlayForm
 
     public enum filtertype
     {
-        median, movingaverage
+        meanMedian, average
     };
 
     public enum pointercontroltype

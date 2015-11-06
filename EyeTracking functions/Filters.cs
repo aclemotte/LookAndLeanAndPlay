@@ -37,9 +37,9 @@ namespace LookAndPlayForm
                 gazeDataFiltered = new PointD(Double.NaN, Double.NaN);
             else
             {
-                if (settings.filtertypeSelected == filtertype.movingaverage)
+                if (settings.filtertypeSelected == filtertype.average)
                     gazeDataFiltered = new PointD(getMovingAverageGaze(gazeData));
-                if (settings.filtertypeSelected == filtertype.median)
+                if (settings.filtertypeSelected == filtertype.meanMedian)
                     gazeDataFiltered = new PointD(getMeanMedianGazeFiltered(gazeData));
             }
 
@@ -77,10 +77,34 @@ namespace LookAndPlayForm
                 listaTempY.Sort();
 
                 PointD MedianPoint = new PointD();
-                //6.se promedia los puntos del medio de la lista y se retorna este valor
-                MedianPoint.X = (listaTempX[FilterBufferSize / 2 - 1] + listaTempX[(FilterBufferSize / 2) + 0] + listaTempX[(FilterBufferSize / 2) + 1]) / 3;
-                MedianPoint.Y = (listaTempY[FilterBufferSize / 2 - 1] + listaTempY[(FilterBufferSize / 2) + 0] + listaTempY[(FilterBufferSize / 2) + 1]) / 3;
-                return MedianPoint;
+
+                //deben existir al menos tres puntos en el buffer para hacer lo siguiente
+                if (GazeBufferX.Count > 2)
+                {
+                    //si es impar se promedia el del medio con sus vecinos
+                    //si es par el promedio de los 4 centrales
+
+                    if (GazeBufferX.Count % 2 == 0)
+                    {
+                        // GazeBufferX.Count is even, need to get the middle two elements, add them together, then divide by 2
+                        MedianPoint.X = (   listaTempX[(GazeBufferX.Count / 2) - 2] + listaTempX[(GazeBufferX.Count / 2) - 1] + 
+                                            listaTempX[(GazeBufferX.Count / 2) + 0] + listaTempX[(GazeBufferX.Count / 2) + 1]) / 4;
+                        MedianPoint.Y = (   listaTempY[(GazeBufferX.Count / 2) - 2] + listaTempY[(GazeBufferX.Count / 2) - 1] + 
+                                            listaTempY[(GazeBufferX.Count / 2) + 0] + listaTempY[(GazeBufferX.Count / 2) + 1]) / 4;
+                    }
+                    else
+                    {
+                        // GazeBufferX.Count is odd, simply get the middle element
+                        MedianPoint.X = (listaTempX[GazeBufferX.Count / 2 - 1] + listaTempX[(GazeBufferX.Count / 2) + 0] + listaTempX[(GazeBufferX.Count / 2) + 1]) / 3;
+                        MedianPoint.Y = (listaTempY[GazeBufferX.Count / 2 - 1] + listaTempY[(GazeBufferX.Count / 2) + 0] + listaTempY[(GazeBufferX.Count / 2) + 1]) / 3;
+                    }
+
+                    return MedianPoint;
+                }
+                else
+                {
+                    return GazePoints;
+                }
             }//9.si el argumento tiene NANs se retorna el argumento
             else
                 return GazePoints;
