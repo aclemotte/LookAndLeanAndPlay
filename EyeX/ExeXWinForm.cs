@@ -19,8 +19,8 @@ namespace LookAndPlayForm
         MouseController CursorControl = new MouseController();
         LowLevelKeyboardHook _llkhk;
         Dwell clickDwell;
-        FixDetectorClass fixationDetector;
-        bool gazeIsFix;
+        //FixDetectorClass fixationDetector;
+        //bool gazeIsFix;
         private Filters gazeFilter = new Filters();
         long firtsTimeStampMicro;
         bool firstTimeStamp;
@@ -44,21 +44,21 @@ namespace LookAndPlayForm
             clickDwell = new Dwell();
 
 
-            fixationDetector = new FixDetectorClass();
-            fixationDetector.FixationStart += fixationDetector_FixationStart;
-            fixationDetector.FixationEnd += fixationDetector_FixationEnd;
+            //fixationDetector = new FixDetectorClass();
+            //fixationDetector.FixationStart += fixationDetector_FixationStart;
+            //fixationDetector.FixationEnd += fixationDetector_FixationEnd;
             //fixationDetector.FixationUpdate += fixationDetector_FixationUpdate;
 
 
-            fixationDetector.Analyzer = EFDAnalyzer.fdaFixationSize;
-            fixationDetector.FixationRadius = 70;
-            fixationDetector.NoiseFilter = 0;
-            fixationDetector.Filter = EFDFilter.fdfAveraging;
-            fixationDetector.MinFixDuration = 20;
-            fixationDetector.FilterBufferSize = 5;
-            fixationDetector.UpdateInterval = 1000;
+            //fixationDetector.Analyzer = EFDAnalyzer.fdaFixationSize;
+            //fixationDetector.FixationRadius = 70;
+            //fixationDetector.NoiseFilter = 0;
+            //fixationDetector.Filter = EFDFilter.fdfAveraging;
+            //fixationDetector.MinFixDuration = 20;
+            //fixationDetector.FilterBufferSize = 5;
+            //fixationDetector.UpdateInterval = 1000;
 
-            fixationDetector.init();            
+            //fixationDetector.init();            
 
             //aclemottelibs.Wimu wimuDevice = new aclemottelibs.Wimu("COM37");
             //if (!wimuDevice.serialPortConfigured)
@@ -76,18 +76,18 @@ namespace LookAndPlayForm
 
 
 
-        void fixationDetector_FixationEnd(int aTime, int aDuration, int aX, int aY)
-        {
-            textBoxFixation.BackColor = Color.Red;
-            gazeFilter.clearBuffers();
-            gazeIsFix = false;
-        }
+        //void fixationDetector_FixationEnd(int aTime, int aDuration, int aX, int aY)
+        //{
+        //    textBoxFixation.BackColor = Color.Red;
+        //    gazeFilter.clearBuffers();
+        //    gazeIsFix = false;
+        //}
 
-        void fixationDetector_FixationStart(int aTime, int aDuration, int aX, int aY)
-        {
-            textBoxFixation.BackColor = Color.Green;
-            gazeIsFix = true;
-        }
+        //void fixationDetector_FixationStart(int aTime, int aDuration, int aX, int aY)
+        //{
+        //    textBoxFixation.BackColor = Color.Green;
+        //    gazeIsFix = true;
+        //}
         	
         
         
@@ -108,7 +108,7 @@ namespace LookAndPlayForm
         private void EyeXWinForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             _llkhk.Uninstall();
-            fixationDetector.finalize();
+            //fixationDetector.finalize();
         }
 
 
@@ -140,11 +140,11 @@ namespace LookAndPlayForm
 
             PointD gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);
             
-            fixationDetector.addPoint(
-                    convertirTimeStampMicro2Milli(gazePointEventArgs.GazeDataReceived.Timestamp),
-                    (int)(gazeWeighted.X * (double)Screen.PrimaryScreen.Bounds.Width),
-                    (int)(gazeWeighted.Y * (double)Screen.PrimaryScreen.Bounds.Height)
-                    );
+            //fixationDetector.addPoint(
+            //        convertirTimeStampMicro2Milli(gazePointEventArgs.GazeDataReceived.Timestamp),
+            //        (int)(gazeWeighted.X * (double)Screen.PrimaryScreen.Bounds.Width),
+            //        (int)(gazeWeighted.Y * (double)Screen.PrimaryScreen.Bounds.Height)
+            //        );
 
 
             PointD cursorFiltered;
