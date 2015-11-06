@@ -26,8 +26,8 @@ namespace LookAndPlayForm
         public const clictype clictypeSelected = clictype.dwell;
 
         //filtro gaze
-        public const filtertype filtertypeSelected = filtertype.meanMedian;
-        public const int filterBufferSize = 41;//numero impar mayor a 3
+        //public const filtertype filtertypeSelected = filtertype.meanMedian;
+        //public const int filterBufferSize = 41;//numero impar mayor a 3
 
         public const eyetrackertype eyetrackerSelected = eyetrackertype.tobii;
     }

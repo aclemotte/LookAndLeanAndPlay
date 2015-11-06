@@ -44,6 +44,22 @@ namespace LookAndPlayForm
         {
             return !(a == b);
         }
+
+        public static double distance(PointD a, PointD b)
+        {
+            double xCuadrado = (a.X - b.X) * (a.X - b.X);
+            double yCuadrado = (a.Y - b.Y) * (a.Y - b.Y);
+            double distancia = Math.Sqrt(xCuadrado + yCuadrado);
+            return distancia;
+        }
+
+        public bool IsNaN()
+        {
+            if(double.IsNaN(X) && double.IsNaN(Y))
+                return true;
+            else
+                return false;
+        }
     }
 
     public struct PointI
