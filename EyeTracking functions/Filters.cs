@@ -13,9 +13,13 @@ namespace LookAndPlayForm
         Queue<double> GazeBufferX;
         Queue<double> GazeBufferY;
 
-        public int FilterBufferSize;
-        public filtertype filtertypeSelected = filtertype.meanMedian;
-        public double thresholdGazeJumpNormalized;
+        Queue<double> CursorBufferX;
+        Queue<double> CursorBufferY;
+
+        public int gazeBufferSize;
+        public int cursorBufferSize;
+        public filtertype filterTypeSelected = filtertype.meanMedian;
+        public double CursorJumpThresholdNormalized;
 
         
         PointD lastFilterReturn;
@@ -26,12 +30,17 @@ namespace LookAndPlayForm
 
         public Filters()
         {
-            FilterBufferSize = 41;// settings.filterBufferSize;
-            filtertypeSelected = filtertype.meanMedian;
-            thresholdGazeJumpNormalized = 0.02;
+            gazeBufferSize = 41;// settings.filterBufferSize;
+            cursorBufferSize = 3;
+            filterTypeSelected = filtertype.meanMedian;
+            CursorJumpThresholdNormalized = 0.03;
 
-            GazeBufferX = new Queue<double>(FilterBufferSize);
-            GazeBufferY = new Queue<double>(FilterBufferSize);
+            GazeBufferX = new Queue<double>(gazeBufferSize);
+            GazeBufferY = new Queue<double>(gazeBufferSize);
+
+            CursorBufferX = new Queue<double>(cursorBufferSize);
+            CursorBufferY = new Queue<double>(cursorBufferSize);
+
         }
 
         /// <summary>
@@ -48,9 +57,9 @@ namespace LookAndPlayForm
             {
                 PointD gazeDataFiltered = new PointD(double.NaN, double.NaN);
 
-                if (filtertypeSelected == filtertype.average)
+                if (filterTypeSelected == filtertype.average)
                     gazeDataFiltered = new PointD(getMovingAverageGaze(gazeData));
-                if (filtertypeSelected == filtertype.meanMedian)
+                if (filterTypeSelected == filtertype.meanMedian)
                     gazeDataFiltered = new PointD(getMeanMedianGazeFiltered(gazeData));
 
                 return gazeDataFiltered;
@@ -81,14 +90,12 @@ namespace LookAndPlayForm
         /// <returns></returns>
         PointD getMeanMedianGazeFiltered(PointD GazePoint)
         {
-            lastFilterReturn = GazePoint;
-
             //1.si el argumento no tiene NANs
-            if(nonNanGazeValues(GazePoint))
+            if (nonNanGazeValues(GazePoint))
             {
-                if (gazeJump(GazePoint))
+                if (!gazeJump1(GazePoint))
                 {
-                    add2Buffer(GazePoint);
+                    addPointD2Buffer(GazePoint, GazeBufferX, GazeBufferY, gazeBufferSize);
 
                     //5.se transforma en lista la cola y se ordena de mayor a menor
                     var listaTempX = GazeBufferX.ToList();
@@ -116,23 +123,27 @@ namespace LookAndPlayForm
                             lastFilterReturn.X = (listaTempX[GazeBufferX.Count / 2 - 1] + listaTempX[(GazeBufferX.Count / 2) + 0] + listaTempX[(GazeBufferX.Count / 2) + 1]) / 3;
                             lastFilterReturn.Y = (listaTempY[GazeBufferX.Count / 2 - 1] + listaTempY[(GazeBufferX.Count / 2) + 0] + listaTempY[(GazeBufferX.Count / 2) + 1]) / 3;
                         }
-
-                        return lastFilterReturn;
+                        //return lastFilterReturn
                     }
-                    else//si el buffer tiene menos de 3 elementos
+                    else//si el buffer tiene menos de 3 elementos, se actualiza lastFilterReturn
                     {
-                        return GazePoint;
+                        lastFilterReturn = GazePoint;
+                        //return lastFilterReturn
                     }
+
+                    return lastFilterReturn;
                 }
-                else //si se detecta un sacadico, se limpia el buffer y se retorna el argumento
+                else //si se detecta un sacadico, se limpia el buffer, se actualiza lastFilterReturn y se retorna el argumento
                 {
+                    lastFilterReturn = GazePoint;
                     clearBuffers();
                     return GazePoint;
                 }
-            }//9.si el argumento tiene NANs se retorna el argumento
+            }//9.si el argumento tiene NANs se retorna el argumento. no se actualiza lastFilterReturn
             else
                 return GazePoint;
         }
+
 
         /// <summary>
         ///1.si el argumento no tiene NANs
@@ -150,7 +161,7 @@ namespace LookAndPlayForm
             //1 si el argumento tiene NANs
             if (nonNanGazeValues(GazePoint))
             {
-                add2Buffer(GazePoint);
+                addPointD2Buffer(GazePoint, CursorBufferX, CursorBufferY, cursorBufferSize);
 
                 //4.2
                 var listaTempX = GazeBufferX.ToList();
@@ -176,45 +187,60 @@ namespace LookAndPlayForm
 
 
         /// <summary>
-        /// se ve si el nuevo gaze es un sacadico
+        /// Busca si GazePoint está a una distancia mayor del CursorJumpThresholdNormalized
         /// para esto se mide la distancia entre: el nuevo gaze y la salida anterior del filtro
         /// si la distancia esta por encima de un umbral es un sacadico
         /// </summary>
         /// <param name="GazePoint"></param>
         /// <returns></returns>
-        private bool gazeJump(PointD GazePoint)
+        private bool gazeJump1(PointD GazePoint)
         {
-            if (PointD.distance(GazePoint, lastFilterReturn) > thresholdGazeJumpNormalized)
+            if (PointD.distance(GazePoint, lastFilterReturn) > CursorJumpThresholdNormalized)
                 return true;
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Busca si GazePoint y los puntos del CursorBuffer se encuentran dentro de un área definida
+        /// para esto se mide los mínimos y máximos sobre cada eje
+        /// con los máximos y mínimos de cada eje se mide la diferencia
+        /// si las diferencias estan por encima de un umbral es un sacadico
+        /// </summary>
+        /// <param name="GazePoint"></param>
+        /// <returns></returns>
+        private bool gazeJump2(PointD GazePoint)
+        {
+            return true;            
         }   
 
-        bool add2Buffer(PointD GazePoint)
+
+        bool addPointD2Buffer(PointD GazePoint, Queue<double> bufferX, Queue<double> bufferY, int bufferSize)
         {
-            if (bufferFull())
+            if (bufferFull(bufferX, bufferSize))
             {
-                GazeBufferX.Dequeue();
-                GazeBufferY.Dequeue();
+                bufferX.Dequeue();
+                bufferY.Dequeue();
             }
 
-            GazeBufferX.Enqueue(GazePoint.X);
-            GazeBufferY.Enqueue(GazePoint.Y);
+            bufferX.Enqueue(GazePoint.X);
+            bufferY.Enqueue(GazePoint.Y);
 
             return true;
+        }
+
+        
+        bool bufferFull(Queue<double> buffer, int bufferSize)
+        {
+            if (buffer.Count == bufferSize || buffer.Count == bufferSize)
+                return true;
+            else
+                return false;
         }
 
         bool nonNanGazeValues(PointD GazePoint)
         {
             if (!double.IsNaN(GazePoint.X) && !double.IsNaN(GazePoint.Y))
-                return true;
-            else
-                return false;
-        }
-
-        bool bufferFull()
-        {
-            if (GazeBufferX.Count == FilterBufferSize || GazeBufferY.Count == FilterBufferSize)
                 return true;
             else
                 return false;

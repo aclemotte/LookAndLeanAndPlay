@@ -150,16 +150,20 @@ namespace LookAndPlayForm
             PointD cursorFiltered;
             if (AppControlCursor)
             {
-                if (gazeIsFix)
-                {
-                    cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
-                    CursorControl.locateCursor(cursorFiltered);
-                    //CursorControl.locateCursor(gazeWeighted);
-                }
-                else
-                {
-                    CursorControl.locateCursor(gazeWeighted);
-                }
+
+                cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
+                CursorControl.locateCursor(cursorFiltered);
+
+                //if (gazeIsFix)
+                //{
+                //    cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
+                //    CursorControl.locateCursor(cursorFiltered);
+                //    //CursorControl.locateCursor(gazeWeighted);
+                //}
+                //else
+                //{
+                //    CursorControl.locateCursor(gazeWeighted);
+                //}
             }
         }
 
