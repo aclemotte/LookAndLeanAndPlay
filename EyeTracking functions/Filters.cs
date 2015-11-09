@@ -10,11 +10,7 @@ namespace LookAndPlayForm
 {
     class Filters
     {
-        Queue<double> GazeBufferX;
-        Queue<double> GazeBufferY;
 
-        Queue<double> CursorBufferX;
-        Queue<double> CursorBufferY;
 
         public int gazeBufferSize;
         public int cursorBufferSize;
@@ -23,6 +19,10 @@ namespace LookAndPlayForm
 
         
         PointD lastFilterReturn;
+        Queue<double> GazeBufferX;
+        Queue<double> GazeBufferY;
+        //Queue<double> CursorBufferX;
+        //Queue<double> CursorBufferY;
 
 
 
@@ -30,16 +30,15 @@ namespace LookAndPlayForm
 
         public Filters()
         {
-            gazeBufferSize = 41;// settings.filterBufferSize;
-            cursorBufferSize = 3;
-            filterTypeSelected = filtertype.meanMedian;
+            gazeBufferSize = 20;// settings.filterBufferSize;
+            //cursorBufferSize = 1;
+            filterTypeSelected = filtertype.average;
             CursorJumpThresholdNormalized = 0.03;
 
             GazeBufferX = new Queue<double>(gazeBufferSize);
             GazeBufferY = new Queue<double>(gazeBufferSize);
-
-            CursorBufferX = new Queue<double>(cursorBufferSize);
-            CursorBufferY = new Queue<double>(cursorBufferSize);
+            //CursorBufferX = new Queue<double>(cursorBufferSize);
+            //CursorBufferY = new Queue<double>(cursorBufferSize);
 
         }
 
@@ -63,12 +62,16 @@ namespace LookAndPlayForm
                     if (filterTypeSelected == filtertype.meanMedian)
                         lastFilterReturn = new PointD(getMeanMedianGazeFiltered(GazePoint));
 
+                    //addPointD2Buffer(lastFilterReturn, CursorBufferX, CursorBufferY, cursorBufferSize);
+
                     return lastFilterReturn;
 
                 }
                 else//si no es una fijacion, se limpia el buffer GazeBufferX, se actualiza lastFilterReturn y se retorna el argumento
                 {
                     lastFilterReturn = GazePoint;
+                    //addPointD2Buffer(lastFilterReturn, CursorBufferX, CursorBufferY, cursorBufferSize);
+
                     clearBuffers();
                     return GazePoint;
                 }
@@ -131,7 +134,7 @@ namespace LookAndPlayForm
 
         PointD getMovingAverageGaze(PointD GazePoint)
         {
-            addPointD2Buffer(GazePoint, GazeBufferX, GazeBufferY, cursorBufferSize);
+            addPointD2Buffer(GazePoint, GazeBufferX, GazeBufferY, gazeBufferSize);
 
             var listaTempX = GazeBufferX.ToList();
             var listaTempY = GazeBufferY.ToList();
@@ -202,7 +205,7 @@ namespace LookAndPlayForm
                 
         bool bufferFull(Queue<double> buffer, int bufferSize)
         {
-            if (buffer.Count == bufferSize || buffer.Count == bufferSize)
+            if (buffer.Count == bufferSize)
                 return true;
             else
                 return false;
