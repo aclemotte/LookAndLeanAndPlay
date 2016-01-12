@@ -62,24 +62,6 @@ namespace LookAndPlayForm
         }
     }
 
-    public struct PointI
-    {
-        public int X;
-        public int Y;
-
-        public PointI(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public PointI(PointI punto)
-        {
-            X = punto.X;
-            Y = punto.Y;
-        }
-    }
-
     public enum clictype
     {
         dwell, mouse, meterse

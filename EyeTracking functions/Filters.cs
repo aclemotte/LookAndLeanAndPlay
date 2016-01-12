@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using Tobii.Gaze.Core;
+
 
 namespace LookAndPlayForm
 {
     class Filters
     {
 
-
         public int gazeBufferSize;
-        public int cursorBufferSize;
+        //public int cursorBufferSize;
         public filtertype filterTypeSelected = filtertype.average;
         public double CursorJumpThresholdNormalized;
 
@@ -78,13 +76,7 @@ namespace LookAndPlayForm
             }            
         }
 
-        public bool clearBuffers()
-        {
-            GazeBufferX.Clear();
-            GazeBufferY.Clear();
-            return true;
-        }
-
+        
 
 
 
@@ -211,12 +203,11 @@ namespace LookAndPlayForm
                 return false;
         }
 
-        bool nonNanGazeValues(PointD GazePoint)
+        bool clearBuffers()
         {
-            if (!double.IsNaN(GazePoint.X) && !double.IsNaN(GazePoint.Y))
-                return true;
-            else
-                return false;
+            GazeBufferX.Clear();
+            GazeBufferY.Clear();
+            return true;
         }
 
     }
