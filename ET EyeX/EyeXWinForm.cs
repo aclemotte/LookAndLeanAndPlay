@@ -24,10 +24,10 @@ namespace LookAndPlayForm
         private Filters gazeFilter = new Filters();
         long firtsTimeStampMicro;
         bool firstTimeStamp;
+        aclemottelibs.Wimu wimuDevice;
 
 
-
-        public EyeXWinForm(EyeTrackingEngine eyeTrackingEngine)
+        public EyeXWinForm(EyeTrackingEngine eyeTrackingEngine, aclemottelibs.Wimu wimuDevice)
         {
             firstTimeStamp = true;
 
@@ -43,6 +43,7 @@ namespace LookAndPlayForm
 
             clickDwell = new Dwell();
 
+            this.wimuDevice = wimuDevice;
 
             //fixationDetector = new FixDetectorClass();
             //fixationDetector.FixationStart += fixationDetector_FixationStart;
@@ -147,10 +148,12 @@ namespace LookAndPlayForm
             //        );
 
 
-            PointD cursorFiltered;
+            //PointD cursorFiltered;
+
             if (AppControlCursor)
             {
 
+                //Console.WriteLine("TimeStamp: {0}", wimuDevice.WimuData.timeStampMiliSec);
 
                 //if (fijacion())
                 //    cursorLocation = GetCursorLocationFromHEADTracking();

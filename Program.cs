@@ -23,18 +23,26 @@ namespace LookAndPlayForm
             Application.SetCompatibleTextRenderingDefault(false);
 
             datosCompartidos = new sharedData();
-            
+
+            aclemottelibs.Wimu wimuDevice = new aclemottelibs.Wimu("COM52");
+
+            if (!wimuDevice.serialPortConfigured)
+            {
+                MessageBox.Show("Head-tracking error!");
+                return;
+            }
+
             try
             {
                 using (_eyeTrackingEngine = new EyeTrackingEngine())
                 {
-                    Application.Run(new EyeXWinForm(_eyeTrackingEngine));
+                    Application.Run(new EyeXWinForm(_eyeTrackingEngine, wimuDevice));
                 }
             }
 
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString(), "Error!");
+                MessageBox.Show(e.ToString(), "Eye-tracking error!");
             }                        
         }
     }
