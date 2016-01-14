@@ -21,14 +21,14 @@ namespace LookAndPlayForm
         //WIMU blanco 20:14:02:18:11:01
 
         //puntero
-        public const pointercontroltype pointercontroltypeSelected = pointercontroltype.eyetracker;
+        public const Definitions.pointercontroltype pointercontroltypeSelected = Definitions.pointercontroltype.eyetracker;
         //click
-        public const clictype clictypeSelected = clictype.dwell;
+        public const Definitions.clictype clictypeSelected = Definitions.clictype.dwell;
 
         //filtro gaze
         //public const filtertype filtertypeSelected = filtertype.meanMedian;
         //public const int filterBufferSize = 41;//numero impar mayor a 3
 
-        public const eyetrackertype eyetrackerSelected = eyetrackertype.tobii;
+        public const Definitions.eyetrackertype eyetrackerSelected = Definitions.eyetrackertype.tobii;
     }
 }

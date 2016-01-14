@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Windows.Forms;
 using FixDet;
+using LookAndPlayForm.Fusionador;
+using LookAndPlayForm.HT;
 using Tobii.Gaze.Core;
 using WobbrockLib.Devices;
 
@@ -24,10 +26,9 @@ namespace LookAndPlayForm
         private Filters gazeFilter = new Filters();
         long firtsTimeStampMicro;
         bool firstTimeStamp;
-        aclemottelibs.Wimu wimuDevice;
+        Head2deltaCursor head2deltaCursor;
 
-
-        public EyeXWinForm(EyeTrackingEngine eyeTrackingEngine, aclemottelibs.Wimu wimuDevice)
+        public EyeXWinForm(EyeTrackingEngine eyeTrackingEngine, HT.Wimu wimuDevice)
         {
             firstTimeStamp = true;
 
@@ -43,7 +44,7 @@ namespace LookAndPlayForm
 
             clickDwell = new Dwell();
 
-            this.wimuDevice = wimuDevice;
+            this.head2deltaCursor = new Head2deltaCursor(wimuDevice);
 
             //fixationDetector = new FixDetectorClass();
             //fixationDetector.FixationStart += fixationDetector_FixationStart;
@@ -139,7 +140,7 @@ namespace LookAndPlayForm
                 Invalidate();
             }));
 
-            PointD gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);
+            PointD gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);//valores normalizados
             
             //fixationDetector.addPoint(
             //        convertirTimeStampMicro2Milli(gazePointEventArgs.GazeDataReceived.Timestamp),
@@ -148,21 +149,15 @@ namespace LookAndPlayForm
             //        );
 
 
-            //PointD cursorFiltered;
-
             if (AppControlCursor)
             {
+                PointD deltaCursor = head2deltaCursor.GetDeltaLocationFromHEADTracking();
+                PointD gazeFilteredNormalized = gazeFilter.filterGazeData(gazeWeighted);//valores normalizados
+                PointD gazeFilteredPixels = eyetrackingFunctions.normalized2Pixels(gazeFilteredNormalized);
+                Point cursorLocation = (Point)fusionador.getCursorLocation(true, deltaCursor, gazeFilteredPixels);                
+                CursorControl.locateCursor(cursorLocation);
 
-                //Console.WriteLine("TimeStamp: {0}", wimuDevice.WimuData.timeStampMiliSec);
 
-                //if (fijacion())
-                //    cursorLocation = GetCursorLocationFromHEADTracking();
-                //else
-                //    cursorLocation = GetCursorLocationFromEYETracking();
-
-                //cursorLocation.locateCursor(cursorLocation);
-                
-                
                 //cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
                 //CursorControl.locateCursor(cursorFiltered);
 

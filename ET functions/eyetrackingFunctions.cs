@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using Tobii.Gaze.Core;
 
 namespace LookAndPlayForm
@@ -90,5 +92,12 @@ namespace LookAndPlayForm
             return returnValue;
         }
 
+        public static PointD normalized2Pixels(PointD normalized)
+        {
+            double posX = normalized.X * (double)(Screen.PrimaryScreen.Bounds.Size.Width + Screen.PrimaryScreen.Bounds.X);
+            double posY = normalized.Y * (double)(Screen.PrimaryScreen.Bounds.Size.Height + Screen.PrimaryScreen.Bounds.Y);
+            PointD posicionMousePx = new PointD(posX, posY);
+            return posicionMousePx;
+        }  
     }
 }

@@ -12,7 +12,7 @@ namespace LookAndPlayForm
 
         public int gazeBufferSize;
         //public int cursorBufferSize;
-        public filtertype filterTypeSelected = filtertype.average;
+        public Definitions.filtertype filterTypeSelected = Definitions.filtertype.average;
         public double CursorJumpThresholdNormalized;
 
         
@@ -30,7 +30,7 @@ namespace LookAndPlayForm
         {
             gazeBufferSize = 20;// settings.filterBufferSize;
             //cursorBufferSize = 1;
-            filterTypeSelected = filtertype.average;
+            filterTypeSelected = Definitions.filtertype.average;
             CursorJumpThresholdNormalized = 0.03;
 
             GazeBufferX = new Queue<double>(gazeBufferSize);
@@ -55,9 +55,9 @@ namespace LookAndPlayForm
                 //si es una fijacion se filtra y se actualiza lastFilterReturn 
                 if (gazeFix1(GazePoint))
                 {
-                    if (filterTypeSelected == filtertype.average)
+                    if (filterTypeSelected == Definitions.filtertype.average)
                         lastFilterReturn = new PointD(getMovingAverageGaze(GazePoint));
-                    if (filterTypeSelected == filtertype.meanMedian)
+                    if (filterTypeSelected == Definitions.filtertype.meanMedian)
                         lastFilterReturn = new PointD(getMeanMedianGazeFiltered(GazePoint));
 
                     //addPointD2Buffer(lastFilterReturn, CursorBufferX, CursorBufferY, cursorBufferSize);

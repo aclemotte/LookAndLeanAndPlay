@@ -24,7 +24,7 @@ namespace LookAndPlayForm
 
             datosCompartidos = new sharedData();
 
-            aclemottelibs.Wimu wimuDevice = new aclemottelibs.Wimu("COM52");
+            HT.Wimu wimuDevice = new HT.Wimu("COM52");
 
             if (!wimuDevice.serialPortConfigured)
             {

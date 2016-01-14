@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace aclemottelibs
+namespace LookAndPlayForm.HT
 {
     public class Wimu
     {

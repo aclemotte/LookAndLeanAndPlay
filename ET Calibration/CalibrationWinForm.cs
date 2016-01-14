@@ -71,8 +71,8 @@ namespace LookAndPlayForm
         {
             pictureBoxCalibrationImage.Size = bigImage;
             currentCalibrationPoint = setCalibrationPoint();
-            
-            if (eyeTrackerReady2Calibrate && (settings.eyetrackerSelected == eyetrackertype.tobii))
+
+            if (eyeTrackerReady2Calibrate && (settings.eyetrackerSelected == Definitions.eyetrackertype.tobii))
             {
                 startTimersEyeX();
             }
