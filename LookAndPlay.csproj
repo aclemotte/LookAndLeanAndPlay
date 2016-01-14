@@ -99,11 +99,11 @@
       <DependentUpon>CalibrationWinForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ET EyeX\EyeTrackingEngine.cs" />
-    <Compile Include="ET EyeX\ExeXWinForm.cs">
+    <Compile Include="ET EyeX\EyeXWinForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ET EyeX\ExeXWinForm.Designer.cs">
-      <DependentUpon>ExeXWinForm.cs</DependentUpon>
+    <Compile Include="ET EyeX\EyeXWinForm.Designer.cs">
+      <DependentUpon>EyeXWinForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ET EyeX\TrackStatusControl.cs">
       <SubType>UserControl</SubType>
@@ -142,8 +142,8 @@
     <EmbeddedResource Include="ET Calibration\CalibrationWinForm.resx">
       <DependentUpon>CalibrationWinForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ET EyeX\ExeXWinForm.resx">
-      <DependentUpon>ExeXWinForm.cs</DependentUpon>
+    <EmbeddedResource Include="ET EyeX\EyeXWinForm.resx">
+      <DependentUpon>EyeXWinForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ET EyeX\TrackStatusControl.resx">
       <DependentUpon>TrackStatusControl.cs</DependentUpon>
