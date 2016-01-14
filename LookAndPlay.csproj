@@ -73,45 +73,42 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Tobii.Gaze.Core.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Wimu">
-      <HintPath>..\HeadTracking\WimuV2\Wimu\bin\Debug\Wimu.dll</HintPath>
-    </Reference>
     <Reference Include="WobbrockLib">
       <HintPath>dll\WobbrockLib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Calibration\CalibrationError.cs" />
-    <Compile Include="Calibration\CalibrationResultForm.cs">
+    <Compile Include="ET Calibration\CalibrationError.cs" />
+    <Compile Include="ET Calibration\CalibrationResultForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Calibration\CalibrationResultForm.designer.cs">
+    <Compile Include="ET Calibration\CalibrationResultForm.designer.cs">
       <DependentUpon>CalibrationResultForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Calibration\CalibrationResultPanel.cs">
+    <Compile Include="ET Calibration\CalibrationResultPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Calibration\CalibrationResultPanel.designer.cs">
+    <Compile Include="ET Calibration\CalibrationResultPanel.designer.cs">
       <DependentUpon>CalibrationResultPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="EyeTracking functions\eyesDetector.cs" />
-    <Compile Include="Calibration\CalibrationWinForm.cs">
+    <Compile Include="ET functions\eyesDetector.cs" />
+    <Compile Include="ET Calibration\CalibrationWinForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Calibration\CalibrationWinForm.Designer.cs">
+    <Compile Include="ET Calibration\CalibrationWinForm.Designer.cs">
       <DependentUpon>CalibrationWinForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EyeX\EyeTrackingEngine.cs" />
-    <Compile Include="EyeX\ExeXWinForm.cs">
+    <Compile Include="ET EyeX\EyeTrackingEngine.cs" />
+    <Compile Include="ET EyeX\ExeXWinForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EyeX\ExeXWinForm.Designer.cs">
+    <Compile Include="ET EyeX\ExeXWinForm.Designer.cs">
       <DependentUpon>ExeXWinForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EyeX\TrackStatusControl.cs">
+    <Compile Include="ET EyeX\TrackStatusControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EyeX\TrackStatusControl.designer.cs">
+    <Compile Include="ET EyeX\TrackStatusControl.designer.cs">
       <DependentUpon>TrackStatusControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -128,27 +125,27 @@
     <Compile Include="Varios\functions.cs" />
     <Compile Include="Varios\Definitions.cs" />
     <Compile Include="Varios\Dwell.cs" />
-    <Compile Include="EyeTracking functions\Filters.cs" />
+    <Compile Include="ET functions\Filters.cs" />
     <Compile Include="Varios\MouseControl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Varios\settings.cs" />
     <Compile Include="Varios\sharedData.cs" />
     <Compile Include="Varios\TestData.cs" />
-    <Compile Include="EyeTracking functions\eyetrackingFunctions.cs" />
-    <EmbeddedResource Include="Calibration\CalibrationResultForm.resx">
+    <Compile Include="ET functions\eyetrackingFunctions.cs" />
+    <EmbeddedResource Include="ET Calibration\CalibrationResultForm.resx">
       <DependentUpon>CalibrationResultForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Calibration\CalibrationResultPanel.resx">
+    <EmbeddedResource Include="ET Calibration\CalibrationResultPanel.resx">
       <DependentUpon>CalibrationResultPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Calibration\CalibrationWinForm.resx">
+    <EmbeddedResource Include="ET Calibration\CalibrationWinForm.resx">
       <DependentUpon>CalibrationWinForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EyeX\ExeXWinForm.resx">
+    <EmbeddedResource Include="ET EyeX\ExeXWinForm.resx">
       <DependentUpon>ExeXWinForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EyeX\TrackStatusControl.resx">
+    <EmbeddedResource Include="ET EyeX\TrackStatusControl.resx">
       <DependentUpon>TrackStatusControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -151,8 +151,19 @@ namespace LookAndPlayForm
             if (AppControlCursor)
             {
 
-                cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
-                CursorControl.locateCursor(cursorFiltered);
+
+                //if (fijacion())
+                //    cursorLocation = GetCursorLocationFromHEADTracking();
+                //else
+                //    cursorLocation = GetCursorLocationFromEYETracking();
+
+                //cursorLocation.locateCursor(cursorLocation);
+                
+                
+                //cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
+                //CursorControl.locateCursor(cursorFiltered);
+
+
 
                 //if (gazeIsFix)
                 //{
