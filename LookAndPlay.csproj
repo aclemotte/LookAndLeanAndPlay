@@ -111,6 +111,8 @@
     <Compile Include="ET EyeX\TrackStatusControl.designer.cs">
       <DependentUpon>TrackStatusControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="HT\Wimu.cs" />
+    <Compile Include="HT\WimuData.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
