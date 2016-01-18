@@ -42,7 +42,7 @@ namespace LookAndPlayForm.HT
 
 
 
-        WimuData currentHeadLocation()
+        public WimuData currentHeadLocation()
         {
             WimuData currentHeadLocation = wimuDevice.WimuData;
             return currentHeadLocation;

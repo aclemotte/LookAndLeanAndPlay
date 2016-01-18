@@ -27,6 +27,8 @@ namespace LookAndPlayForm
         long firtsTimeStampMicro;
         bool firstTimeStamp;
         Head2deltaCursor head2deltaCursor;
+        WimuData headData;
+
 
         public EyeXWinForm(EyeTrackingEngine eyeTrackingEngine, HT.Wimu wimuDevice)
         {
@@ -148,6 +150,8 @@ namespace LookAndPlayForm
             //        (int)(gazeWeighted.Y * (double)Screen.PrimaryScreen.Bounds.Height)
             //        );
 
+            headData = head2deltaCursor.currentHeadLocation();
+            point2Chart(new PointD(headData.timeStampMiliSec, headData.yaw));
 
             if (AppControlCursor)
             {
@@ -173,6 +177,30 @@ namespace LookAndPlayForm
                 //{
                 //    CursorControl.locateCursor(gazeWeighted);
                 //}
+            }
+        }
+
+        delegate void AddDataToChartDelegate(PointD newPoint);
+
+        private void point2Chart(PointD newPoint)
+        {
+            int pointsInChart = 100;
+
+            if (chartYaw.InvokeRequired)
+                chartYaw.Invoke(new AddDataToChartDelegate(this.point2Chart), new object[] { newPoint });
+            else
+            {
+                if (chartYaw.Series["SeriesYaw"].Points.Count > pointsInChart)
+                {
+                    chartYaw.Series["SeriesYaw"].Points.AddXY(newPoint.X, newPoint.Y);
+                    chartYaw.Series["SeriesYaw"].Points.RemoveAt(0);
+                    chartYaw.ChartAreas["ChartArea1"].AxisX.Minimum = chartYaw.Series["SeriesYaw"].Points[0].XValue;
+                    chartYaw.ChartAreas["ChartArea1"].AxisX.Maximum = chartYaw.Series["SeriesYaw"].Points[pointsInChart].XValue;
+                }
+                else
+                {
+                    chartYaw.Series["SeriesYaw"].Points.AddXY(newPoint.X, newPoint.Y);
+                }
             }
         }
 

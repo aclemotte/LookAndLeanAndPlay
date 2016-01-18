@@ -32,6 +32,9 @@ namespace LookAndPlayForm
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EyeXWinForm));
             this.progressBar4Distance = new System.Windows.Forms.ProgressBar();
             this.buttonViewCalibration = new System.Windows.Forms.Button();
@@ -46,7 +49,8 @@ namespace LookAndPlayForm
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this._trackStatus = new LookAndPlayForm.TrackStatusControl();
-            this.textBoxFixation = new System.Windows.Forms.TextBox();
+            this.chartYaw = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            ((System.ComponentModel.ISupportInitialize)(this.chartYaw)).BeginInit();
             this.SuspendLayout();
             // 
             // progressBar4Distance
@@ -168,20 +172,32 @@ namespace LookAndPlayForm
             this._trackStatus.Size = new System.Drawing.Size(340, 280);
             this._trackStatus.TabIndex = 3;
             // 
-            // textBoxFixation
+            // chartYaw
             // 
-            this.textBoxFixation.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxFixation.Location = new System.Drawing.Point(371, 447);
-            this.textBoxFixation.Name = "textBoxFixation";
-            this.textBoxFixation.Size = new System.Drawing.Size(50, 26);
-            this.textBoxFixation.TabIndex = 26;
+            this.chartYaw.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chartYaw.BackColor = System.Drawing.Color.Transparent;
+            chartArea1.Name = "ChartArea1";
+            this.chartYaw.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.chartYaw.Legends.Add(legend1);
+            this.chartYaw.Location = new System.Drawing.Point(371, 12);
+            this.chartYaw.Name = "chartYaw";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Legend = "Legend1";
+            series1.Name = "SeriesYaw";
+            this.chartYaw.Series.Add(series1);
+            this.chartYaw.Size = new System.Drawing.Size(450, 165);
+            this.chartYaw.TabIndex = 26;
+            this.chartYaw.Text = "chart1";
             // 
             // EyeXWinForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 496);
-            this.Controls.Add(this.textBoxFixation);
+            this.ClientSize = new System.Drawing.Size(876, 496);
+            this.Controls.Add(this.chartYaw);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.buttonCalibrate);
@@ -203,6 +219,7 @@ namespace LookAndPlayForm
             this.Text = "Ventana de calibración y posicionamiento";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EyeXWinForm_FormClosed);
             this.Load += new System.EventHandler(this.EyeXWinForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.chartYaw)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -223,7 +240,7 @@ namespace LookAndPlayForm
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox textBoxFixation;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartYaw;
     }
 }
 
