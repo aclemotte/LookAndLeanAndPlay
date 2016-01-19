@@ -181,8 +181,8 @@ namespace LookAndPlayForm
             // 
             this.chartYaw.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chartYaw.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.AxisY.Maximum = 180D;
-            chartArea1.AxisY.Minimum = -180D;
+            chartArea1.AxisY.Maximum = 190D;
+            chartArea1.AxisY.Minimum = -190D;
             chartArea1.Name = "ChartArea1";
             this.chartYaw.ChartAreas.Add(chartArea1);
             legend1.Enabled = false;
@@ -214,8 +214,8 @@ namespace LookAndPlayForm
             // 
             this.chartPitch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chartPitch.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.AxisY.Maximum = 180D;
-            chartArea2.AxisY.Minimum = -180D;
+            chartArea2.AxisY.Maximum = 100D;
+            chartArea2.AxisY.Minimum = -100D;
             chartArea2.Name = "ChartArea1";
             this.chartPitch.ChartAreas.Add(chartArea2);
             legend2.Enabled = false;
@@ -247,8 +247,8 @@ namespace LookAndPlayForm
             // 
             this.chartRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chartRoll.BackColor = System.Drawing.Color.Transparent;
-            chartArea3.AxisY.Maximum = 180D;
-            chartArea3.AxisY.Minimum = -180D;
+            chartArea3.AxisY.Maximum = 100D;
+            chartArea3.AxisY.Minimum = -100D;
             chartArea3.Name = "ChartArea1";
             this.chartRoll.ChartAreas.Add(chartArea3);
             legend3.Enabled = false;
