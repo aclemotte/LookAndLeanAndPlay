@@ -103,6 +103,10 @@ namespace LookAndPlayForm
 
         private void GazePoint(object sender, GazePointEventArgs gazePointEventArgs)
         {
+            headData = wimuDevice.WimuData;
+            headData.timeStampMiliSec = (double)PseudoTimeStampMiliSecImu++;
+            
+
             BeginInvoke(new Action(() =>
             {
                 var handle = Handle;
@@ -115,24 +119,11 @@ namespace LookAndPlayForm
                 _trackStatus.OnGazeData(gazePointEventArgs.GazeDataReceived);
                 progressBar4Distance.Value = eyetrackingFunctions.distanceBetweenDev2User(gazePointEventArgs.GazeDataReceived);
                 Invalidate();
+                headData2Chart(headData);
             }));
 
 
 
-
-            PointD gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);//valores normalizados
-
-
-
-
-
-
-            headData = wimuDevice.WimuData;
-
-            //point2Chart(new PointD(headData.timeStampMiliSec, headData.yaw));
-            //point2Chart(new PointD(PseudoTimeStampMiliSecImu++, headData.yaw));
-            headData.timeStampMiliSec = (double)PseudoTimeStampMiliSecImu++;
-            headData2Chart(headData);
 
 
 
@@ -142,27 +133,11 @@ namespace LookAndPlayForm
             {
                 PointD deltaCursor = head2deltaCursor.GetDeltaLocationFromHEADTracking();
                 //PointD deltaCursor = new PointD(0, 0);
+                PointD gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);//valores normalizados
                 PointD gazeFilteredNormalized = gazeFilter.filterGazeData(gazeWeighted);//valores normalizados
                 PointD gazeFilteredPixels = eyetrackingFunctions.normalized2Pixels(gazeFilteredNormalized);
                 Point cursorLocation = (Point)fusionador.getCursorLocation(true, deltaCursor, gazeFilteredPixels);                
                 CursorControl.locateCursor(cursorLocation);
-
-
-                //cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
-                //CursorControl.locateCursor(cursorFiltered);
-
-
-
-                //if (gazeIsFix)
-                //{
-                //    cursorFiltered = gazeFilter.filterGazeData(gazeWeighted);
-                //    CursorControl.locateCursor(cursorFiltered);
-                //    //CursorControl.locateCursor(gazeWeighted);
-                //}
-                //else
-                //{
-                //    CursorControl.locateCursor(gazeWeighted);
-                //}
             }
         }
 
