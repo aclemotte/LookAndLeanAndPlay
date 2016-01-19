@@ -36,5 +36,9 @@ namespace LookAndPlayForm.HT
         {
             return new WimuData(data1.yaw + data2.yaw, data1.pitch + data2.pitch, data1.roll + data2.roll);
         }
+        public static WimuData operator -(WimuData data1, WimuData data2)
+        {
+            return new WimuData(data1.yaw - data2.yaw, data1.pitch - data2.pitch, data1.roll - data2.roll);
+        }
     }
 }

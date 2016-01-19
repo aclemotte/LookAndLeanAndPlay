@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace LookAndPlayForm.HT
 {
-    public class Wimu
+    public class Wimu : IDisposable
     {
 
         public bool serialPortConfigured { get; set; }
@@ -34,6 +34,21 @@ namespace LookAndPlayForm.HT
             if(serialPortConfigured)
                 configBw();
         }
+
+        public void Dispose()
+        {
+            trabajador.CancelAsync();
+            wimuSerialPort.Close();
+        }
+
+
+
+
+
+
+
+
+
 
         private bool configBw()
         {
@@ -74,7 +89,6 @@ namespace LookAndPlayForm.HT
             {
                 WimuData = readWimuData();
             }
-            wimuSerialPort.Close();
         }
 
         private WimuData readWimuData()
@@ -82,16 +96,12 @@ namespace LookAndPlayForm.HT
             WimuData wimudata = new WimuData();
             string message = string.Empty;
 
-            //#YPR=Yaw, Pitch, Roll, Yaw+Pitch+Roll, alfa, beta, gama, alfa+beta+gama, timeStamp
-            //ver si el último carácter es una "r" para saber si esta completo
-
             do
             {
                 try
                 {
                     message = wimuSerialPort.ReadLine();
                 }
-
                 catch 
                 { 
                     //cancelar al trabajador
@@ -102,9 +112,11 @@ namespace LookAndPlayForm.HT
                 }
 
             }
-            while (!message.StartsWith("#") || !message.EndsWith("\r"));
+            while (!message.StartsWith("#YPR") || !message.EndsWith("\r"));
 
             string[] words = message.Split('=',',','\r');
+            //#YPR=Yaw, Pitch, Roll, Yaw+Pitch+Roll, alfa, beta, gama, alfa+beta+gama, timeStamp
+            //ver si el último carácter es una "r" para saber si esta completo
             /*
                 [0]: "#YPR"
                 [1]: "-18.16" yaw
@@ -134,5 +146,6 @@ namespace LookAndPlayForm.HT
 
             return wimudata;
         }
+
     }
 }

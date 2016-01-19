@@ -12,6 +12,7 @@ namespace LookAndPlayForm
     {
         static EyeTrackingEngine _eyeTrackingEngine;
         public static sharedData datosCompartidos;
+        static HT.Wimu wimuDevice;
 
         /// <summary>
         /// The main entry point for the application.
@@ -24,7 +25,7 @@ namespace LookAndPlayForm
 
             datosCompartidos = new sharedData();
 
-            HT.Wimu wimuDevice = new HT.Wimu("COM52");
+            wimuDevice = new HT.Wimu("COM56");//52 arduino
 
             if (!wimuDevice.serialPortConfigured)
             {
@@ -43,7 +44,7 @@ namespace LookAndPlayForm
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString(), "Eye-tracking error!");
-            }                        
+            }
         }
     }
 }

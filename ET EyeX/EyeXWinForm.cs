@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using FixDet;
+using System.Windows.Forms.DataVisualization.Charting;
 using LookAndPlayForm.Fusionador;
 using LookAndPlayForm.HT;
 using Tobii.Gaze.Core;
@@ -21,18 +21,18 @@ namespace LookAndPlayForm
         MouseController CursorControl = new MouseController();
         LowLevelKeyboardHook _llkhk;
         Dwell clickDwell;
-        //FixDetectorClass fixationDetector;
-        //bool gazeIsFix;
-        private Filters gazeFilter = new Filters();
-        long firtsTimeStampMicro;
-        bool firstTimeStamp;
-        Head2deltaCursor head2deltaCursor;
-        WimuData headData;
+        Filters gazeFilter = new Filters();
 
+        int pointsInChart = 100;
+
+        Head2deltaCursor head2deltaCursor;
+        int PseudoTimeStampMiliSecImu;
+        WimuData headData;
+        HT.Wimu wimuDevice;
 
         public EyeXWinForm(EyeTrackingEngine eyeTrackingEngine, HT.Wimu wimuDevice)
         {
-            firstTimeStamp = true;
+            PseudoTimeStampMiliSecImu = 0;
 
             InitializeComponent();
 
@@ -46,29 +46,8 @@ namespace LookAndPlayForm
 
             clickDwell = new Dwell();
 
-            this.head2deltaCursor = new Head2deltaCursor(wimuDevice);
-
-            //fixationDetector = new FixDetectorClass();
-            //fixationDetector.FixationStart += fixationDetector_FixationStart;
-            //fixationDetector.FixationEnd += fixationDetector_FixationEnd;
-            //fixationDetector.FixationUpdate += fixationDetector_FixationUpdate;
-
-
-            //fixationDetector.Analyzer = EFDAnalyzer.fdaFixationSize;
-            //fixationDetector.FixationRadius = 70;
-            //fixationDetector.NoiseFilter = 0;
-            //fixationDetector.Filter = EFDFilter.fdfAveraging;
-            //fixationDetector.MinFixDuration = 20;
-            //fixationDetector.FilterBufferSize = 5;
-            //fixationDetector.UpdateInterval = 1000;
-
-            //fixationDetector.init();            
-
-            //aclemottelibs.Wimu wimuDevice = new aclemottelibs.Wimu("COM37");
-            //if (!wimuDevice.serialPortConfigured)
-            //{
-            //    MessageBox.Show("!wimuDevice.serialPortConfigured");
-            //}
+            this.wimuDevice = wimuDevice;
+            this.head2deltaCursor = new Head2deltaCursor(wimuDevice);            
 
         }
 
@@ -80,18 +59,6 @@ namespace LookAndPlayForm
 
 
 
-        //void fixationDetector_FixationEnd(int aTime, int aDuration, int aX, int aY)
-        //{
-        //    textBoxFixation.BackColor = Color.Red;
-        //    gazeFilter.clearBuffers();
-        //    gazeIsFix = false;
-        //}
-
-        //void fixationDetector_FixationStart(int aTime, int aDuration, int aX, int aY)
-        //{
-        //    textBoxFixation.BackColor = Color.Green;
-        //    gazeIsFix = true;
-        //}
         	
         
         
@@ -102,7 +69,16 @@ namespace LookAndPlayForm
         {
             base.OnClosing(e);
             eyeTrackingEngine.Dispose();
+            wimuDevice.Dispose();
         }
+
+
+
+
+
+
+
+
 
         private void EyeXWinForm_Load(object sender, EventArgs e)
         {
@@ -112,7 +88,6 @@ namespace LookAndPlayForm
         private void EyeXWinForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             _llkhk.Uninstall();
-            //fixationDetector.finalize();
         }
 
 
@@ -142,20 +117,31 @@ namespace LookAndPlayForm
                 Invalidate();
             }));
 
-            PointD gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);//valores normalizados
-            
-            //fixationDetector.addPoint(
-            //        convertirTimeStampMicro2Milli(gazePointEventArgs.GazeDataReceived.Timestamp),
-            //        (int)(gazeWeighted.X * (double)Screen.PrimaryScreen.Bounds.Width),
-            //        (int)(gazeWeighted.Y * (double)Screen.PrimaryScreen.Bounds.Height)
-            //        );
 
-            headData = head2deltaCursor.currentHeadLocation();
-            point2Chart(new PointD(headData.timeStampMiliSec, headData.yaw));
+
+
+            PointD gazeWeighted = eyetrackingFunctions.WeighGaze(gazePointEventArgs.GazeDataReceived);//valores normalizados
+
+
+
+
+
+
+            headData = wimuDevice.WimuData;
+
+            //point2Chart(new PointD(headData.timeStampMiliSec, headData.yaw));
+            //point2Chart(new PointD(PseudoTimeStampMiliSecImu++, headData.yaw));
+            headData.timeStampMiliSec = (double)PseudoTimeStampMiliSecImu++;
+            headData2Chart(headData);
+
+
+
+
 
             if (AppControlCursor)
             {
                 PointD deltaCursor = head2deltaCursor.GetDeltaLocationFromHEADTracking();
+                //PointD deltaCursor = new PointD(0, 0);
                 PointD gazeFilteredNormalized = gazeFilter.filterGazeData(gazeWeighted);//valores normalizados
                 PointD gazeFilteredPixels = eyetrackingFunctions.normalized2Pixels(gazeFilteredNormalized);
                 Point cursorLocation = (Point)fusionador.getCursorLocation(true, deltaCursor, gazeFilteredPixels);                
@@ -180,47 +166,44 @@ namespace LookAndPlayForm
             }
         }
 
-        delegate void AddDataToChartDelegate(PointD newPoint);
 
-        private void point2Chart(PointD newPoint)
+
+
+
+        private void headData2Chart(WimuData headData)
         {
-            int pointsInChart = 100;
+            point2Chart(new PointD(headData.timeStampMiliSec, headData.yaw), chartYaw);
+            point2Chart(new PointD(headData.timeStampMiliSec, headData.pitch), chartPitch);
+            point2Chart(new PointD(headData.timeStampMiliSec, headData.roll), chartRoll);
+        }
 
-            if (chartYaw.InvokeRequired)
-                chartYaw.Invoke(new AddDataToChartDelegate(this.point2Chart), new object[] { newPoint });
+        delegate void AddDataToChartDelegate(PointD newPoint, Chart chartName);
+
+        private void point2Chart(PointD newPoint, Chart chartName)
+        {
+
+
+            if (chartName.InvokeRequired)
+                chartName.Invoke(new AddDataToChartDelegate(this.point2Chart), new object[] { newPoint, chartName });
             else
             {
-                if (chartYaw.Series["SeriesYaw"].Points.Count > pointsInChart)
+                chartName.Series["Series1"].Points.AddXY(newPoint.X, newPoint.Y);
+
+                if (chartName.Series["Series1"].Points.Count > pointsInChart)
                 {
-                    chartYaw.Series["SeriesYaw"].Points.AddXY(newPoint.X, newPoint.Y);
-                    chartYaw.Series["SeriesYaw"].Points.RemoveAt(0);
-                    chartYaw.ChartAreas["ChartArea1"].AxisX.Minimum = chartYaw.Series["SeriesYaw"].Points[0].XValue;
-                    chartYaw.ChartAreas["ChartArea1"].AxisX.Maximum = chartYaw.Series["SeriesYaw"].Points[pointsInChart].XValue;
+                    chartName.Series["Series1"].Points.RemoveAt(0);
                 }
-                else
-                {
-                    chartYaw.Series["SeriesYaw"].Points.AddXY(newPoint.X, newPoint.Y);
-                }
+
+                chartName.ChartAreas["ChartArea1"].AxisX.Minimum = chartName.Series["Series1"].Points[0].XValue;
+                chartName.ChartAreas["ChartArea1"].AxisX.Maximum = chartName.Series["Series1"].Points[chartName.Series["Series1"].Points.Count-1].XValue;
+
             }
         }
 
-        int convertirTimeStampMicro2Milli(long timeStampMicro)
-        {
-            int timeStampMili;
 
-            if(firstTimeStamp)
-            {
-                firstTimeStamp = false;
-                firtsTimeStampMicro = timeStampMicro;
-                timeStampMili = 0;
-            }
-            else
-            {
-                timeStampMili = ((int)(timeStampMicro - firtsTimeStampMicro)) / 1000;
-            }
-            
-            return timeStampMili;
-        }
+
+
+
 
         private void OnGetCalibrationCompleted(object sender, CalibrationReadyEventArgs e)
         {
@@ -245,6 +228,10 @@ namespace LookAndPlayForm
 
 
 
+
+
+
+        //Teclado cambia control
         private void OnKeyboardHookPress(object sender, KeyPressEventArgs e)
         {
             switch (e.KeyChar)
@@ -275,6 +262,8 @@ namespace LookAndPlayForm
 
 
 
+
+        //Botones
         private void buttonViewCalibration_Click(object sender, EventArgs e)
         {
             var resultForm = new CalibrationResultForm();

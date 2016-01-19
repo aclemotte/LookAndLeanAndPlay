@@ -11,7 +11,8 @@ namespace LookAndPlayForm.HT
         HT.Wimu wimuDevice;
         WimuData refPointHead;
         PointD deltaCursor;
-        double linearCoef = 50;
+        double linearCoefYaw = -0.78;
+        double linearCoefPitch = 0.78;
 
 
         public Head2deltaCursor(HT.Wimu wimuDevice)
@@ -37,20 +38,22 @@ namespace LookAndPlayForm.HT
         }	
 
 
+        
 
 
 
 
 
-        public WimuData currentHeadLocation()
+
+        WimuData currentHeadLocation()
         {
             WimuData currentHeadLocation = wimuDevice.WimuData;
             return currentHeadLocation;
         }
-
+                
         PointD linearTransformation()
         {
-            WimuData offsetHead = currentHeadLocation() + refPointHead;
+            WimuData offsetHead = refPointHead - currentHeadLocation();
             PointD deltaCursorLocation = offsetHead2CursorLocation(offsetHead);
             return deltaCursorLocation;
         }
@@ -58,14 +61,9 @@ namespace LookAndPlayForm.HT
         PointD offsetHead2CursorLocation(WimuData offsetHead)
         {
             PointD deltaCursorLocation = new PointD();
-            deltaCursor.X = offsetHead.yaw * linearCoef;
-            deltaCursor.Y = offsetHead.pitch * linearCoef;
+            deltaCursorLocation.X = offsetHead.yaw * linearCoefYaw;
+            deltaCursorLocation.Y = offsetHead.pitch * linearCoefPitch;
             return deltaCursorLocation;
         }
-    }
-
-    class deltaCursor2Cursor
-    {
-
     }
 }
