@@ -6,3 +6,5 @@ Keywords: Tobii, EyeX, Calibration, cursor control, Visual Studio 2013, .NET, C#
 - to see the last calibration done. 
 - to place an user correctly in the tracking box range of the eye-tracker
 - to control the cursor by pressing the letter 'Q' or 'q'.
+- to see the Head-tracking data
+- to control the cursor with the eye-tracking and with the head-tracking
